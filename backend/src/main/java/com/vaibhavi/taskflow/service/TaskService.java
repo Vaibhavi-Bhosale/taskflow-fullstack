@@ -26,4 +26,14 @@ public class TaskService {
           return  taskRepository.save(task);
 
     }
+
+    public Task getTaskById(Long id)
+    {
+        return taskRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Task not Present"));
+
+
+    }
+
+    
 }

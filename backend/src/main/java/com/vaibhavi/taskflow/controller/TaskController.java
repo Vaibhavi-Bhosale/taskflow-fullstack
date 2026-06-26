@@ -3,10 +3,7 @@ package com.vaibhavi.taskflow.controller;
 import com.vaibhavi.taskflow.entity.Task;
 import com.vaibhavi.taskflow.service.TaskService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,15 +13,23 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    @GetMapping("/allTasks")
+    @GetMapping("/tasks")
     public List<Task> getAllTasks()
     {
         return taskService.getAllTasks();
     }
 
-    @PostMapping("/createTask")
+    @PostMapping("/tasks")
     public  Task createTask(@RequestBody Task task)
     {
         return taskService.createTask(task);
     }
+
+    @GetMapping("/tasks/{id}")
+    public Task getTaskById(@PathVariable Long id)
+    {
+        return taskService.getTaskById(id);
+    }
+
+
 }
