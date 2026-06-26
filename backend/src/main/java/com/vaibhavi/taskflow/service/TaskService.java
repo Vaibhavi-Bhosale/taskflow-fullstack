@@ -31,8 +31,27 @@ public class TaskService {
     {
         return taskRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Task not Present"));
+    }
 
+    public void deleteTaskById(Long id)
+    {
+        taskRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Task not found"));
 
+        taskRepository.deleteById(id);
+    }
+
+    public Task updateTask(Long id, Task task)
+    {
+        Task t = taskRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Task not found"));
+
+        t.setTitle(task.getTitle());
+        t.setDescription(task.getDescription());
+        t.setStatus(task.getStatus());
+        t.setPriority(task.getPriority());
+
+      return  taskRepository.save(t);
     }
 
     
