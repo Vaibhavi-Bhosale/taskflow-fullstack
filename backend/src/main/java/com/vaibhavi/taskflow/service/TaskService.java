@@ -2,6 +2,7 @@ package com.vaibhavi.taskflow.service;
 
 import com.vaibhavi.taskflow.entity.Task;
 import com.vaibhavi.taskflow.enums.Status;
+import com.vaibhavi.taskflow.exception.TaskNotFoundException;
 import com.vaibhavi.taskflow.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,23 +21,23 @@ public class TaskService {
       }
 
       public Task createTask(Task task)
-    {
+     {
          task.setStatus(Status.PENDING);
 
           return  taskRepository.save(task);
 
-    }
+     }
 
     public Task getTaskById(Long id)
     {
         return taskRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Task not Present"));
+                .orElseThrow(()-> new TaskNotFoundException("Task not Present"));
     }
 
     public void deleteTaskById(Long id)
     {
         taskRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Task not found"));
+                .orElseThrow(()-> new TaskNotFoundException("Task not found"));
 
         taskRepository.deleteById(id);
     }
@@ -44,7 +45,7 @@ public class TaskService {
     public Task updateTask(Long id, Task task)
     {
         Task t = taskRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Task not found"));
+                .orElseThrow(()-> new TaskNotFoundException("Task not found"));
 
         t.setTitle(task.getTitle());
         t.setDescription(task.getDescription());

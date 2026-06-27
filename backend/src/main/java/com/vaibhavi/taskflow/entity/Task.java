@@ -15,7 +15,6 @@ public class Task {
     private Long id;
 
     @NotBlank
-    @NotNull
     private String title;
 
 

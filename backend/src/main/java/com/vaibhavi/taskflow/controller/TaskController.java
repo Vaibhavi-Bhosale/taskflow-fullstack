@@ -2,6 +2,7 @@ package com.vaibhavi.taskflow.controller;
 
 import com.vaibhavi.taskflow.entity.Task;
 import com.vaibhavi.taskflow.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class TaskController {
     }
 
     @PostMapping("/createTasks")
-    public  Task createTask(@RequestBody Task task)
+    public  Task createTask(@Valid @RequestBody Task task)
     {
         return taskService.createTask(task);
     }
@@ -38,7 +39,7 @@ public class TaskController {
     }
 
     @PutMapping("/tasks/{id}")
-    public Task updateTask(@PathVariable Long id, @RequestBody Task task)
+    public Task updateTask(@PathVariable Long id, @Valid @RequestBody Task task)
     {
         return taskService.updateTask(id, task);
     }
