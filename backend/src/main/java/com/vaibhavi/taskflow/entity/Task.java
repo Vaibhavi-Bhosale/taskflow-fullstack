@@ -25,4 +25,12 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     private Priority priority;
+
+    @ManyToOne
+    @JoinColumn(name = "assigned_to")
+    private User assignedTo;
+
+//    assigned_to
+//            created_at
+//    updated_at
 }

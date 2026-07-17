@@ -1,5 +1,7 @@
 package com.vaibhavi.taskflow.controller;
 
+import com.vaibhavi.taskflow.dto.TaskRequest;
+import com.vaibhavi.taskflow.dto.TaskResponse;
 import com.vaibhavi.taskflow.entity.Task;
 import com.vaibhavi.taskflow.service.TaskService;
 import jakarta.validation.Valid;
@@ -20,10 +22,10 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
-    @PostMapping("/createTasks")
-    public  Task createTask(@Valid @RequestBody Task task)
+    @PostMapping("/tasks")
+    public  Task createTask(@Valid @RequestBody TaskRequest request)
     {
-        return taskService.createTask(task);
+        return taskService.createTask(request);
     }
 
     @GetMapping("/tasks/{id}")
@@ -42,5 +44,11 @@ public class TaskController {
     public Task updateTask(@PathVariable Long id, @Valid @RequestBody Task task)
     {
         return taskService.updateTask(id, task);
+    }
+
+    @PostMapping("/tasks/{taskId}/assignTo/{userId}")
+    public TaskResponse assignTask(@PathVariable Long taskId, @PathVariable Long userId)
+    {
+        return  taskService.assignTask(taskId, userId);
     }
 }
