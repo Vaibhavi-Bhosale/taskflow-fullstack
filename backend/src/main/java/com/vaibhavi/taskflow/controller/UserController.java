@@ -15,6 +15,18 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @GetMapping("/test")
+    String test()
+    {
+        return "Hiii..public route";
+    }
+
+    @GetMapping("/admin")
+    String admin()
+    {
+        return "for admin only";
+    }
+
     @PostMapping("/createUser")
     UserResponse createUser(@RequestBody UserRequest request)
     {

@@ -2,6 +2,7 @@ package com.vaibhavi.taskflow.service;
 
 import com.vaibhavi.taskflow.dto.TaskRequest;
 import com.vaibhavi.taskflow.dto.TaskResponse;
+import com.vaibhavi.taskflow.dto.UpdateTaskStatusRequest;
 import com.vaibhavi.taskflow.dto.UserResponse;
 import com.vaibhavi.taskflow.entity.Task;
 import com.vaibhavi.taskflow.entity.User;
@@ -123,4 +124,10 @@ public class TaskService {
         return taskResponse;
         
     }
+
+//    public String updateTaskStatus(long taskId, UpdateTaskStatusRequest updateTaskStatusRequest) {
+//
+//
+//
+//    }
 }

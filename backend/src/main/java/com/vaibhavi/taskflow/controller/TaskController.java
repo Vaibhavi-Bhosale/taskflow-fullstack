@@ -2,6 +2,7 @@ package com.vaibhavi.taskflow.controller;
 
 import com.vaibhavi.taskflow.dto.TaskRequest;
 import com.vaibhavi.taskflow.dto.TaskResponse;
+import com.vaibhavi.taskflow.dto.UpdateTaskStatusRequest;
 import com.vaibhavi.taskflow.entity.Task;
 import com.vaibhavi.taskflow.service.TaskService;
 import jakarta.validation.Valid;
@@ -52,5 +53,11 @@ public class TaskController {
         return  taskService.assignTask(taskId, userId);
     }
 
+//
+//    @PutMapping("tasks/{taskId}/status")
+//     public String updateTaskStatus(@PathVariable long taskId, @RequestBody UpdateTaskStatusRequest updateTaskStatusRequest)
+//    {
+//        return  taskService.updateTaskStatus(taskId, updateTaskStatusRequest);
+//    }
 
 }
