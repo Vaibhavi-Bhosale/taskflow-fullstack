@@ -12,6 +12,7 @@ import com.vaibhavi.taskflow.exception.UserNotFoundException;
 import com.vaibhavi.taskflow.repository.TaskRepository;
 import com.vaibhavi.taskflow.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,6 +28,9 @@ public class UserService {
     @Autowired
     TaskRepository taskRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     public UserResponse createUser(UserRequest request) {
          Optional<User> checkUser = userRepository.findByEmail(request.getEmail());
 
@@ -39,7 +43,12 @@ public class UserService {
 
          user.setName(request.getName());
          user.setEmail(request.getEmail());
-         user.setPassword(request.getPassword());
+
+         String passwordBefore = request.getPassword();
+         String passwordEncode = passwordEncoder.encode(passwordBefore);
+         user.setPassword(passwordEncode);
+
+
          user.setRole(UserRole.USER);
 
          User newUser = userRepository.save(user);
