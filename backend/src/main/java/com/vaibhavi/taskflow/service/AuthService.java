@@ -1,6 +1,8 @@
 package com.vaibhavi.taskflow.service;
 
 import com.vaibhavi.taskflow.dto.LoginRequest;
+import com.vaibhavi.taskflow.dto.LoginResponse;
+import lombok.extern.java.Log;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,7 +20,7 @@ public class AuthService {
            this.jwtService = jwtService;
        }
 
-       public String login(LoginRequest loginRequest)
+       public LoginResponse login(LoginRequest loginRequest)
        {
            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                    loginRequest.getEmail(),
@@ -29,6 +31,13 @@ public class AuthService {
            Authentication authentication = authenticationManager.authenticate(token);
 
 
-           return jwtService.generateToken(loginRequest.getEmail());
+           String jwtToken =  jwtService.generateToken(loginRequest.getEmail());
+
+           return new LoginResponse(
+                   jwtToken,
+                   "Bearer",
+                   loginRequest.getEmail()
+
+           );
        }
 }

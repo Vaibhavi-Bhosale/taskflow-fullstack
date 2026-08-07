@@ -20,10 +20,16 @@ public class UserController {
     {
         return "Hiii..public route";
     }
+    @GetMapping("/user")
+    String user()
+    {
+        return "Welcome user !";
+    }
 
     @GetMapping("/admin")
     String admin()
     {
+
         return "for admin only";
     }
 

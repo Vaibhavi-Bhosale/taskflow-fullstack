@@ -1,6 +1,7 @@
 package com.vaibhavi.taskflow.controller;
 
 import com.vaibhavi.taskflow.dto.LoginRequest;
+import com.vaibhavi.taskflow.dto.LoginResponse;
 import com.vaibhavi.taskflow.service.AuthService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ public class AuthController {
        }
 
        @PostMapping("/login")
-       public String login(@RequestBody LoginRequest loginRequest)
+       public LoginResponse login(@RequestBody LoginRequest loginRequest)
        {
            return  authService.login(loginRequest);
        }
