@@ -18,19 +18,19 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/tasks")
-    public List<Task> getAllTasks()
+    public List<TaskResponse> getAllTasks()
     {
         return taskService.getAllTasks();
     }
 
     @PostMapping("/tasks")
-    public  Task createTask(@Valid @RequestBody TaskRequest request)
+    public  TaskResponse createTask(@Valid @RequestBody TaskRequest request)
     {
         return taskService.createTask(request);
     }
 
     @GetMapping("/tasks/{id}")
-    public Task getTaskById(@PathVariable Long id)
+    public TaskResponse getTaskById(@PathVariable Long id)
     {
         return taskService.getTaskById(id);
     }
@@ -42,7 +42,7 @@ public class TaskController {
     }
 
     @PutMapping("/tasks/{id}")
-    public Task updateTask(@PathVariable Long id, @Valid @RequestBody Task task)
+    public TaskResponse updateTask(@PathVariable Long id, @Valid @RequestBody Task task)
     {
         return taskService.updateTask(id, task);
     }
@@ -53,11 +53,10 @@ public class TaskController {
         return  taskService.assignTask(taskId, userId);
     }
 
-//
-//    @PutMapping("tasks/{taskId}/status")
-//     public String updateTaskStatus(@PathVariable long taskId, @RequestBody UpdateTaskStatusRequest updateTaskStatusRequest)
-//    {
-//        return  taskService.updateTaskStatus(taskId, updateTaskStatusRequest);
-//    }
+
+    @PutMapping("/tasks/{taskId}/status")
+    public TaskResponse updateTaskStatus(@PathVariable long taskId, @RequestBody UpdateTaskStatusRequest updateTaskStatusRequest) {
+        return taskService.updateTaskStatus(taskId, updateTaskStatusRequest);
+    }
 
 }

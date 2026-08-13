@@ -33,15 +33,17 @@ public class UserController {
         return "for admin only";
     }
 
-    @PostMapping("/createUser")
+    @PostMapping("/users")
     UserResponse createUser(@RequestBody UserRequest request)
     {
+        System.out.print("\n\n\n Request Input create user : " + request+ "\n\n\n\n\n");
         return  userService.createUser(request);
     }
 
     @GetMapping("/users/tasks/{userId}")
     List<TaskResponse> getUsersTasks(@PathVariable Long userId)
     {
+
         return  userService.getUserTasks(userId);
     }
 }

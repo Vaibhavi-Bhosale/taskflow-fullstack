@@ -12,11 +12,13 @@ import com.vaibhavi.taskflow.exception.UserNotFoundException;
 import com.vaibhavi.taskflow.repository.TaskRepository;
 import com.vaibhavi.taskflow.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -64,6 +66,16 @@ public class UserService {
     }
 
     public List<TaskResponse> getUserTasks(Long userId) {
+
+        User currentUser = (User) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        if (currentUser.getRole() != UserRole.ADMIN
+                && !Objects.equals(userId, currentUser.getId())) {
+
+            throw new RuntimeException("You cannot access another user's tasks");
+        }
 
        Optional<User> optionalUser = userRepository.findById(userId);
 

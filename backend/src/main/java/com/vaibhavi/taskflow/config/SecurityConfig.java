@@ -4,7 +4,7 @@ import com.vaibhavi.taskflow.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
+
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,9 +27,12 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth-> auth
-                        .requestMatchers("/test","/createUser", "auth/login").permitAll()
+                        .requestMatchers("/test","/users", "/auth/login").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/tasks/{taskId}/status").authenticated()
+                        .requestMatchers("/tasks", "/tasks/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated())
 
                 .addFilterBefore(
