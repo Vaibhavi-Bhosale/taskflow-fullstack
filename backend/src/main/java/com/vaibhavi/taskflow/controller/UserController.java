@@ -4,46 +4,49 @@ import com.vaibhavi.taskflow.dto.TaskResponse;
 import com.vaibhavi.taskflow.dto.UserRequest;
 import com.vaibhavi.taskflow.dto.UserResponse;
 import com.vaibhavi.taskflow.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+
 
     @GetMapping("/test")
-    String test()
-    {
+    public String test() {
         return "Hiii..public route";
     }
+
+
     @GetMapping("/user")
-    String user()
-    {
+    public String user() {
         return "Welcome user !";
     }
 
-    @GetMapping("/admin")
-    String admin()
-    {
 
+    @GetMapping("/admin")
+    public String admin() {
         return "for admin only";
     }
 
+
     @PostMapping("/users")
-    UserResponse createUser(@RequestBody UserRequest request)
-    {
-        System.out.print("\n\n\n Request Input create user : " + request+ "\n\n\n\n\n");
-        return  userService.createUser(request);
+    public UserResponse createUser(
+            @Valid @RequestBody UserRequest request) {
+
+        return userService.createUser(request);
     }
 
-    @GetMapping("/users/tasks/{userId}")
-    List<TaskResponse> getUsersTasks(@PathVariable Long userId)
-    {
 
-        return  userService.getUserTasks(userId);
+    @GetMapping("/users/tasks/{userId}")
+    public List<TaskResponse> getUsersTasks(
+            @PathVariable Long userId) {
+
+        return userService.getUserTasks(userId);
     }
 }

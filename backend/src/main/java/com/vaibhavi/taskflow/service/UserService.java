@@ -11,7 +11,7 @@ import com.vaibhavi.taskflow.exception.TaskNotFoundException;
 import com.vaibhavi.taskflow.exception.UserNotFoundException;
 import com.vaibhavi.taskflow.repository.TaskRepository;
 import com.vaibhavi.taskflow.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,51 +19,36 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    TaskRepository taskRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserRequest request) {
-         Optional<User> checkUser = userRepository.findByEmail(request.getEmail());
 
-         if(checkUser.isPresent())
-         {
-             throw new EmailAlreadyExistsException("Email Already Exits...try another one haha");
-         }
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException(
+                    "Email already exists. Try another one."
+            );
+        }
 
-         User user = new User();
+        User user = new User();
 
-         user.setName(request.getName());
-         user.setEmail(request.getEmail());
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(UserRole.USER);
 
-         String passwordBefore = request.getPassword();
-         String passwordEncode = passwordEncoder.encode(passwordBefore);
-         user.setPassword(passwordEncode);
+        User savedUser = userRepository.save(user);
 
-
-         user.setRole(UserRole.USER);
-
-         User newUser = userRepository.save(user);
-
-         UserResponse response =  new UserResponse();
-
-         response.setName(newUser.getName());
-         response.setEmail(newUser.getEmail());
-         response.setRole(newUser.getRole());
-         response.setId(newUser.getId());
-
-         return  response;
+        return mapUserToResponse(savedUser);
     }
+
 
     public List<TaskResponse> getUserTasks(Long userId) {
 
@@ -71,43 +56,62 @@ public class UserService {
                 .getContext()
                 .getAuthentication()
                 .getPrincipal();
+
         if (currentUser.getRole() != UserRole.ADMIN
                 && !Objects.equals(userId, currentUser.getId())) {
 
-            throw new RuntimeException("You cannot access another user's tasks");
+            throw new RuntimeException(
+                    "You cannot access another user's tasks"
+            );
         }
 
-       Optional<User> optionalUser = userRepository.findById(userId);
+        userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new UserNotFoundException("User not found"));
 
-       if(optionalUser.isEmpty())
-       {
-           throw new UserNotFoundException("User not found");
-       }
+        List<Task> taskList =
+                taskRepository.findByAssignedToId(userId);
 
-       List<Task> taskList =  taskRepository. findByAssignedToId(userId);
-       if(taskList.isEmpty())
-       {
+        if (taskList.isEmpty()) {
+            throw new TaskNotFoundException(
+                    "No task found for the user"
+            );
+        }
 
-           throw new TaskNotFoundException("No Task Found for the user");
-       }
-       List<TaskResponse> taskResponse = new ArrayList<>(){
-       };
+        List<TaskResponse> responses = new ArrayList<>();
 
-       for(Task tasks : taskList)
-       {
-            TaskResponse taskResponse1 = new TaskResponse();
+        for (Task task : taskList) {
 
-            taskResponse1.setId(tasks.getId());
-            taskResponse1.setTitle(tasks.getTitle());
-            taskResponse1.setDescription(tasks.getDescription());
-            taskResponse1.setPriority(tasks.getPriority());
-            taskResponse1.setStatus(tasks.getStatus());
+            TaskResponse response = new TaskResponse();
 
-            taskResponse.add(taskResponse1);
+            response.setId(task.getId());
+            response.setTitle(task.getTitle());
+            response.setDescription(task.getDescription());
+            response.setPriority(task.getPriority());
+            response.setStatus(task.getStatus());
 
-       }
+            if (task.getAssignedTo() != null) {
+                response.setAssignedTo(
+                        mapUserToResponse(task.getAssignedTo())
+                );
+            }
 
-       return taskResponse;
+            responses.add(response);
+        }
 
+        return responses;
+    }
+
+
+    private UserResponse mapUserToResponse(User user) {
+
+        UserResponse response = new UserResponse();
+
+        response.setId(user.getId());
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole());
+
+        return response;
     }
 }

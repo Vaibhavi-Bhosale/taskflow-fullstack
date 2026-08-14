@@ -1,7 +1,6 @@
 package com.vaibhavi.taskflow.exception;
 
 import com.vaibhavi.taskflow.dto.ErrorResponse;
-import com.vaibhavi.taskflow.entity.Task;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

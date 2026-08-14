@@ -3,7 +3,6 @@ package com.vaibhavi.taskflow.controller;
 import com.vaibhavi.taskflow.dto.TaskRequest;
 import com.vaibhavi.taskflow.dto.TaskResponse;
 import com.vaibhavi.taskflow.dto.UpdateTaskStatusRequest;
-import com.vaibhavi.taskflow.entity.Task;
 import com.vaibhavi.taskflow.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,7 @@ public class TaskController {
     }
 
     @PutMapping("/tasks/{id}")
-    public TaskResponse updateTask(@PathVariable Long id, @Valid @RequestBody Task task)
+    public TaskResponse updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequest task)
     {
         return taskService.updateTask(id, task);
     }
@@ -55,8 +54,11 @@ public class TaskController {
 
 
     @PutMapping("/tasks/{taskId}/status")
-    public TaskResponse updateTaskStatus(@PathVariable long taskId, @RequestBody UpdateTaskStatusRequest updateTaskStatusRequest) {
-        return taskService.updateTaskStatus(taskId, updateTaskStatusRequest);
+    public TaskResponse updateTaskStatus(
+            @PathVariable long taskId,
+            @Valid @RequestBody UpdateTaskStatusRequest request) {
+
+        return taskService.updateTaskStatus(taskId, request);
     }
 
 }

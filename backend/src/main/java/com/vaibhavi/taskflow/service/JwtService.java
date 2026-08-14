@@ -1,7 +1,5 @@
 package com.vaibhavi.taskflow.service;
 
-
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -24,12 +22,12 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(String email)
-    {
+    public String generateToken(String email) {
+
         Date now = new Date();
 
         Date expiry = new Date(
-                now.getTime() + 1000 * 60 * 60 * 24
+                now.getTime() + 1000L * 60 * 60 * 24
         );
 
         return Jwts.builder()
@@ -41,6 +39,7 @@ public class JwtService {
     }
 
     public String extractEmail(String token) {
+
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
@@ -48,5 +47,4 @@ public class JwtService {
                 .getPayload()
                 .getSubject();
     }
-
 }
