@@ -4,6 +4,7 @@ import com.vaibhavi.taskflow.dto.TaskRequest;
 import com.vaibhavi.taskflow.dto.TaskResponse;
 import com.vaibhavi.taskflow.dto.UpdateTaskStatusRequest;
 import com.vaibhavi.taskflow.service.TaskService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class TaskController {
 
     private final TaskService taskService;
